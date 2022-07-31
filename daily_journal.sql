@@ -12,12 +12,12 @@ CREATE TABLE `moods` (
 `label` TEXT NOT NULL
 );
 
-CREATE TABLE `tag` (
+CREATE TABLE `tags` (
 `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 `name` TEXT NOT NULL 
 );
 
-CREATE TABLE `entry_tag` (
+CREATE TABLE `entry_tags` (
 `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 `entry_id` INTEGER NOT NULL,
 `tag_id` INTEGER NOT NULL,
@@ -35,10 +35,12 @@ INSERT INTO `moods` VALUES (null, "Sad");
 INSERT INTO `moods` VALUES (null, "Angry");
 INSERT INTO `moods` VALUES (null, "Ok");
 
-INSERT INTO `tag` VALUES (null, "Chimachanga");
-INSERT INTO `tag` VALUES (null, "Pickles");
-INSERT INTO `tag` VALUES (null, "Rasta");
+INSERT INTO `tags` VALUES (null, "Chimachanga");
+INSERT INTO `tags` VALUES (null, "Pickles");
+INSERT INTO `tags` VALUES (null, "Rasta");
 
-INSERT INTO `entry_tag` VALUES (null, 1, 2);
-INSERT INTO `entry_tag` VALUES (null, 2, 1);
+INSERT INTO `entry_tags` VALUES (null, 1, 2);
+INSERT INTO `entry_tags` VALUES (null, 2, 1);
 
+DROP TABLE `tag`;
+DROP TABLE `entry_tag`;

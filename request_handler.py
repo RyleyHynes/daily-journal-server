@@ -6,6 +6,7 @@ from urllib.parse import parse_qs, urlparse
 from views import get_all_entries
 from views.entry_requests import create_entry, delete_entry, get_entries_with_search, get_single_entry, update_entry
 from views.mood_requests import delete_mood, get_all_moods, get_single_mood
+from views.tag_requests import get_all_tags, get_single_tag
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
 # work together for a common purpose. In this case, that
@@ -93,6 +94,11 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = f"{get_single_mood(id)}"
                 else:
                     response = f"{get_all_moods()}"
+            elif resource == "tags":
+                if id is not None:
+                    response = f"{get_single_tag(id)}"
+                else:
+                    response = f"{get_all_tags()}"
         else:  # THere is a ? in the path, run the query param functions
             (resource, query) = parsed
 
