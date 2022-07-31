@@ -3,6 +3,7 @@ import json
 
 from models.entry import Entry
 from models.mood import Mood
+from models.tag import Tag
 
 
 ENTRIES = [
@@ -78,9 +79,30 @@ def get_all_entries():
             mood = Mood(row['mood_id'], row['mood_label'])
 
             entry.mood = mood.__dict__
+            entry.tags = []
 
+            entry_id = row['id']
+
+            db_cursor.execute("""
+            SELECT
+                e.id,
+                e.entry_id,
+                e.tag_id,
+                t.name tag_name
+            FROM entry_tags e
+            JOIN tags t
+                ON e.tag_id = t.id
+            WHERE e.entry_id = ?
+            """, (entry_id, ))
+
+            tag_dataset = db_cursor.fetchall()
+
+            for row2 in tag_dataset:
+                tag = Tag(row2['tag_id'], row2['tag_name'])
+                entry.tags.append(tag.__dict__)
             # Add the dictionary representation of the entry to the list
             entries.append(entry.__dict__)
+
         # Use `json` package to properly serialize list as JSON
         return json.dumps(entries)
 
@@ -171,6 +193,15 @@ def create_entry(new_entry):
         id = db_cursor.lastrowid
 
         new_entry['id'] = id
+        tags = new_entry['tags']
+
+        for tag in tags:
+            db_cursor.execute("""
+            INSERT INTO entry_tags
+                (entry_id, tag_id)
+            VALUES
+                (?, ?);
+            """, (id, tag))
 
     return json.dumps(new_entry)
 
@@ -188,7 +219,7 @@ def update_entry(id, new_entry):
                 mood_id = ?,
                 date = ?
         WHERE id = ?
-        """, (new_entry['concept'], new_entry['entry'], new_entry['mood_id'], new_entry['date'], id,   ))
+        """, (new_entry['concept'], new_entry['entry'], new_entry['mood_id'], new_entry['date'], id,))
 
         # Were any rows affected?
         # Did the client send an `id` that exists?
