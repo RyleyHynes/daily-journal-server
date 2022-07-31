@@ -188,7 +188,7 @@ def update_entry(id, new_entry):
                 mood_id = ?,
                 date = ?
         WHERE id = ?
-        """, (new_entry['concept'], new_entry['entry'], new_entry['mood_id'], new_entry['date'],  ))
+        """, (new_entry['concept'], new_entry['entry'], new_entry['mood_id'], new_entry['date'], id,   ))
 
         # Were any rows affected?
         # Did the client send an `id` that exists?
